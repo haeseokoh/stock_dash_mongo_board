@@ -1,0 +1,39 @@
+.DateRangePickerInput__withBorder {
+    border : 0px;
+    padding : 0px;
+}
+
+.DateInput, .DateInput_1{
+    border : 1px solid;
+    border-radius: 4px;
+    bottom: 0;
+    color: #aaa;
+    left: 0;
+    padding: 0px 0px;
+    right: 0;
+    top: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+
+.DateInput_input, .DateInput_input_1 {
+    font-size: inherit;
+    bottom: 0;
+    color: #aaa;
+    left: 0;
+    padding: 0px 10px;
+    right: 0;
+    top: 0;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+/* https://github.com/facultyai/dash-bootstrap-components/issues/334 */
+.dash-table-container .row {
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}

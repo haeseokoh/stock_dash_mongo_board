@@ -46,7 +46,7 @@ def get_layout(arg):
         html.Div(id='screener-site-link'),
         html.Br(),
         screener_sink.get_layout(arg),
-    ])
+    ],style={'margin': '35px'})
 
 def selector(id):
     return dcc.Dropdown(

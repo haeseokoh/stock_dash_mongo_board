@@ -50,11 +50,11 @@ def get_layout(arg):
                 html.Br(),
                 html.Div(id='select-group-sub-cell-data'), # select-cell-data
                 html.Div(id='site-link'),
-                trading_sink2.get_layout(arg),
             ],
             width=8),
-        ])
-    ])
+        ],),
+        trading_sink2.get_layout(arg),
+    ],style={'margin': '35px'})
 
 def selector(id):
     return dcc.Dropdown(

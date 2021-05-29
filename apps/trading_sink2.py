@@ -22,19 +22,37 @@ def get_layout(arg):
     arg_dic=arg_parser(arg)
 
     return html.Div([
-        html.Div([
-            dbc.Row([
-                # html.Div(id='plm_report_style_2'),
-            ]),
-            dbc.Row([
-                dcc.Graph(id='OHLCV-fig2'),
-            ]),
-            dbc.Row([
-                dcc.Graph(id='trading-fig2'),
-            ]),
-        ], # style={'margin': '35px'}
-        ),
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    dbc.Row([
+                        # html.Div(id='plm_report_style_2'),
+                    ]),
+                    dbc.Row([
+                        dcc.Graph(id='OHLCV-fig2'),
+                    ]),
+                    dbc.Row([
+                        dcc.Graph(id='trading-fig2'),
+                    ]),
+                ],),
+            ], width=4, style={'margin': '35px'}),
+            dbc.Col([
+                html.Div([
+                    html.Iframe(id='iframe-trading2',
+                                src="https://finance.naver.com/main/main.nhn",
+                                style={"height": "900px", "width": "95%"})
+                    ]),
+            ], width=7, style={'margin': '35px'}),
+        ]),
     ])
+
+@app.callback(
+    dash.dependencies.Output('iframe-trading2', 'src'),
+    Input('naver-link', 'href'),
+)
+def iframe_screener(href):
+    return href
+
 
 def OHLCV_fig(df):
     fig = go.Figure()

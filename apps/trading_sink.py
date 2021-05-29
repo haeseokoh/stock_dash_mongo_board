@@ -22,19 +22,37 @@ def get_layout(arg):
     arg_dic=arg_parser(arg)
 
     return html.Div([
-        html.Div([
-            dbc.Row([
-                # html.Div(id='plm_report_style_2'),
+        dbc.Row([
+            dbc.Col([
+                html.Div([
+                    dbc.Row([
+                        # html.Div(id='plm_report_style_2'),
+                    ]),
+                    dbc.Row([
+                        dcc.Graph(id='OHLCV-fig'),
+                    ]),
+                    dbc.Row([
+                        dcc.Graph(id='trading-fig'),
+                    ]),
+                ],),
+            ], width=4, style={'margin': '35px'}),
+            dbc.Col([
+                html.Div([
+                    html.Iframe(id='iframe-trading',
+                                src="https://finance.naver.com/main/main.nhn",
+                                style={"height": "900px", "width": "100%"})
+                    ]),
+                ],width=7, style={'margin': '35px'}),
             ]),
-            dbc.Row([
-                dcc.Graph(id='OHLCV-fig'),
-            ]),
-            dbc.Row([
-                dcc.Graph(id='trading-fig'),
-            ]),
-        ], # style={'margin': '35px'}
-        ),
-    ])
+        ])
+
+@app.callback(
+    dash.dependencies.Output('iframe-trading', 'src'),
+    Input('naver-link', 'href'),
+)
+def iframe_screener(href):
+    return href
+
 
 def OHLCV_fig(df):
     fig = go.Figure()
@@ -98,7 +116,7 @@ def plm_report_sink_main(select_cell_data):
     # print('plm_report_sink_main :',select_cell_data, select_group_sub_cell_data)
     database_name = 'stock'
 
-    start = (datetime.today() - timedelta(days=300)).strftime('%Y%m%d')
+    start = (datetime.today() - timedelta(days=365*2)).strftime('%Y%m%d')
     end = datetime.today().strftime('%Y%m%d')
 
     jongmok = select_cell_data #'CJ제일제당'

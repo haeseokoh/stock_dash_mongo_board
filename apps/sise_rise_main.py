@@ -38,7 +38,7 @@ def get_layout(arg):
         html.Div(id='sise-site-link'),
         html.Br(),
         trading_sink.get_layout(arg),
-    ])
+    ],style={'margin': '35px'})
 
 def selector(id):
     return dcc.Dropdown(

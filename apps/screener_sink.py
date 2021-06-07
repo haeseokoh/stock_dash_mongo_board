@@ -48,6 +48,7 @@ def get_layout(arg):
 
 @app.callback(
     dash.dependencies.Output('iframe-screener', 'src'),
+    # Input('daum-link', 'href'),
     Input('naver-link', 'href'),
 )
 def iframe_screener(href):

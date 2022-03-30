@@ -138,3 +138,7 @@ def plm_report_sink_main(select_cell_data):
         return OHLCV_chart, trading_chart
     else:
         return go.Figure(), go.Figure()
+
+
+# http://consensus.hankyung.com/apps.chart/chart.view_frame?report_type=CO&business_code=081660
+# https://dash-bootstrap-components.opensource.faculty.ai/docs/components/modal/

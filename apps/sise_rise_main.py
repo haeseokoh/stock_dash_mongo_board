@@ -155,6 +155,7 @@ def update_select_cell(data, row_ids, active_cell, page_current, page_size):
     naver_f_href='https://finance.naver.com/sise/'
     daum_href='https://finance.daum.net/'
     nice_href='http://media.kisline.com/'
+    hankyung_href = 'http://consensus.hankyung.com/apps.analysis/analysis.list'
 
     try:
         if active_cell is not None:
@@ -168,6 +169,7 @@ def update_select_cell(data, row_ids, active_cell, page_current, page_size):
                 naver_f_href='https://finance.naver.com/item/main.nhn?code={}'.format(ticker)
                 daum_href='https://finance.daum.net/quotes/A{}#analysis/consensus'.format(ticker)
                 nice_href='http://media.kisline.com/highlight/mainHighlight.nice?paper_stock={}&nav=1'.format(ticker)
+                hankyung_href = 'http://consensus.hankyung.com/apps.chart/chart.view_frame?report_type=CO&business_code={}'.format(ticker)
     except:
         pass
 
@@ -176,4 +178,5 @@ def update_select_cell(data, row_ids, active_cell, page_current, page_size):
             dcc.Link('-full', id='naver-f-link', href=naver_f_href),
             dcc.Link('-daum', id='daum-link', href=daum_href),
             dcc.Link('-nice', id='nice-link', href=nice_href),
+            dcc.Link('-hankyung', id='hankyung-link', href=hankyung_href),
     ])

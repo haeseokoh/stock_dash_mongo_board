@@ -14,7 +14,33 @@ from libs.mongo_api import db_init, db_update4
 
 # df_jongmok = pd.DataFrame()
 
-df_jongmok = pd.read_pickle(r'D:\project\pythonProject\stack_pykrx\exam\종목.pkl')
+# df_jongmok = pd.read_pickle(r'D:\project\pythonProject\stack_pykrx\exam\종목.pkl')
+# D:\project\pythonProject\stack_pykrx\exam\ticker.py
+df_jongmok = pd.DataFrame()
+market = []
+tickers = []
+jongmoks = []
+
+for x in ['KOSPI', 'KOSDAQ', 'KONEX']:
+    _jongmoks = []
+    _tickers = stock.get_market_ticker_list(market=x)
+    for ticker in _tickers:
+        __jongmok = stock.get_market_ticker_name(ticker)
+        # print(종목)
+        _jongmoks.append(__jongmok)
+    market.extend([x]*len(_tickers))
+    tickers.extend(_tickers)
+    jongmoks.extend(_jongmoks)
+
+df_jongmok['market'] = market
+df_jongmok['tickers'] = tickers
+df_jongmok['jongmoks'] = jongmoks
+
+
+# df_jongmok.to_excel('종목.xlsx', index=False)
+# df_jongmok.to_pickle('종목.pkl')
+
+
 unique_field = '날짜'
 
 def get_tickers(jongmok):

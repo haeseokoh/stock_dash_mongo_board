@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import numpy as np
 import pandas as pd
 
+from libs_stock.naver_util_sise import KOSPI_sise_market_sum_simple
+
 BASE_URL='https://finance.naver.com/sise/sise_market_sum.nhn?sosok='
 
 KOSPI_CODE = 0
@@ -12,7 +14,7 @@ KOSDAK_CODE = 1
 START_PAGE = 1
 fields = []
 
-def main(code):
+def _main(code):
     # total_page을 가져오기 위한 requests
     res = requests.get(BASE_URL + str(code) + "&page=" + str(START_PAGE))
     page_soup = BeautifulSoup(res.text, 'lxml')
@@ -36,6 +38,12 @@ def main(code):
     df.to_excel('NaverFinance_{}.xlsx'.format(code))
     df.to_pickle('NaverFinance_{}.pkl'.format(code))
 
+def main(code):
+    d=KOSPI_sise_market_sum_simple()
+    df=pd.DataFrame(d)
+    del df['id']
+    df.to_excel('NaverFinance_{}.xlsx'.format(code))
+    df.to_pickle('NaverFinance_{}.pkl'.format(code))
 
 def crawl(code, page):
     global fields

@@ -4,3 +4,6 @@
 *.pyc
 venv
 *.zip
+*.xlsx
+*.pkl
+*.csv

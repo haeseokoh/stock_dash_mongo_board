@@ -19,6 +19,14 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
+# MONTH_AGO_index = -1+-5*4
+# LONG_AGO_index = -1+-5*4*12
+# MONTH_AGO_index = -1+-5*1
+# LONG_AGO_index = -1+-5*4*1
+MONTH_AGO_index = -1
+LONG_AGO_index = -1-5
+
+
 def main(code):
     df_finance = pd.read_excel(r'NaverFinance_{}.xlsx'.format(code)) # NaverFinance - 재무정보
     df_price = pd.read_excel(r'datas.xlsx',index_col=0) # datas - 가격정보 with 날짜정보 그대로
@@ -43,8 +51,8 @@ def main(code):
     # print('MONTH_AGO',MONTH_AGO)
     # LONG_AGO = _LONG_AGO.strftime('%Y-%m-%d')
     # print('LONG_AGO',LONG_AGO)
-    MONTH_AGO = df_price.index.tolist()[-1+-5*4]
-    LONG_AGO = df_price.index.tolist()[-1+-5*4*12]
+    MONTH_AGO = df_price.index.tolist()[MONTH_AGO_index]
+    LONG_AGO = df_price.index.tolist()[LONG_AGO_index]
 
     price_month_ago =[]
     price_year_ago =[]

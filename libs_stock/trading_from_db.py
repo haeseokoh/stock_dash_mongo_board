@@ -9,42 +9,46 @@ import numpy as np
 
 from datetime import datetime, timedelta
 # import datetime
+from momentem_stock_rel.momentem_stock_db_util import get_tickers_df
+
 sys.path.append(os.path.abspath('../libs'))
 from libs.mongo_api import db_init, db_update4
 
+# # df_jongmok = pd.DataFrame()
+#
+# # df_jongmok = pd.read_pickle(r'D:\project\pythonProject\stack_pykrx\exam\종목.pkl')
+# # D:\project\pythonProject\stack_pykrx\exam\ticker.py
 # df_jongmok = pd.DataFrame()
-
-# df_jongmok = pd.read_pickle(r'D:\project\pythonProject\stack_pykrx\exam\종목.pkl')
-# D:\project\pythonProject\stack_pykrx\exam\ticker.py
-df_jongmok = pd.DataFrame()
-market = []
-tickers = []
-jongmoks = []
-
-for x in ['KOSPI', 'KOSDAQ', 'KONEX']:
-    _jongmoks = []
-    _tickers = stock.get_market_ticker_list(market=x)
-    for ticker in _tickers:
-        __jongmok = stock.get_market_ticker_name(ticker)
-        # print(종목)
-        _jongmoks.append(__jongmok)
-    market.extend([x]*len(_tickers))
-    tickers.extend(_tickers)
-    jongmoks.extend(_jongmoks)
-
-df_jongmok['market'] = market
-df_jongmok['tickers'] = tickers
-df_jongmok['jongmoks'] = jongmoks
-
-
-# df_jongmok.to_excel('종목.xlsx', index=False)
-# df_jongmok.to_pickle('종목.pkl')
+# market = []
+# tickers = []
+# jongmoks = []
+#
+# for x in ['KOSPI', 'KOSDAQ', 'KONEX']:
+#     _jongmoks = []
+#     _tickers = stock.get_market_ticker_list(market=x)
+#     for ticker in _tickers:
+#         __jongmok = stock.get_market_ticker_name(ticker)
+#         # print(종목)
+#         _jongmoks.append(__jongmok)
+#     market.extend([x]*len(_tickers))
+#     tickers.extend(_tickers)
+#     jongmoks.extend(_jongmoks)
+#
+# df_jongmok['market'] = market
+# df_jongmok['tickers'] = tickers
+# df_jongmok['jongmoks'] = jongmoks
+#
+#
+# # df_jongmok.to_excel('종목.xlsx', index=False)
+# # df_jongmok.to_pickle('종목.pkl')
 
 
 unique_field = '날짜'
 
 def get_tickers(jongmok):
     # https://www.interviewqs.com/ddi-code-snippets/rows-cols-python
+    df_jongmok = get_tickers_df()
+
     row = df_jongmok.loc[df_jongmok['jongmoks'] == jongmok]
     return row['tickers'].values[0] if len(row['tickers'].values) else None
 
@@ -112,11 +116,17 @@ def db_missing_date(_db, _s, _e, name, ticker=None):
 # market_trading
 ##########################################
 # combine pykrx and dB
-def get_from_db_recover_missing_data(_db, wanted, start, end, jongmok, field=['기관합계', '기타법인', '개인', '외국인합계']):
+def get_from_db_recover_missing_data(_db, wanted, start, end, jongmok, field=['기관합계', '기타법인', '개인', '외국인합계'], ticker=None):
     missing_date = db_missing_date(_db, start, end, jongmok)
+
+    if ticker == None:
+        # ticker = get_tickers(jongmok)
+        ticker = stock.get_market_ticker_name(jongmok)
+
     for x in missing_date:
         if x[0]!=None:
-            get_and_update_db(_db, wanted, x[0], x[1], jongmok, get_tickers(jongmok))
+            # get_and_update_db(_db, wanted, x[0], x[1], jongmok, get_tickers(jongmok))
+            get_and_update_db(_db, wanted, x[0], x[1], jongmok, ticker)
 
     dlist = get_from_db(_db, start, end, jongmok, field=field)
     return dlist

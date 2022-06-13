@@ -104,9 +104,11 @@ def main(code):
     df_finance = df_finance.sort_values(by=['FINAL_RANK'], ascending=[True])
     df_finance = df_finance.reset_index(drop=True)
 
-    df_finance.to_excel('momentum_value_{}.xlsx'.format(code)) # 최종 선정된 주식들 목록
+    ymd=datetime.today().strftime('%Y%m%d')
+
+    df_finance.to_excel('momentum_value_{}_{}.xlsx'.format(ymd, code)) # 최종 선정된 주식들 목록
     print(df_finance.head())
-    df_finance.to_csv('momentum_value_{}.csv'.format(code))
+    df_finance.to_csv('momentum_value_{}_{}.csv'.format(ymd, code))
 
 if __name__ == '__main__':
     main(KOSPI_CODE)

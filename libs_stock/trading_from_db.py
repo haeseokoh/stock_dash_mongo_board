@@ -133,8 +133,9 @@ def get_from_db_recover_missing_data(_db, wanted, start, end, jongmok, field=['�
 
 # get from pykrx update to dB
 def get_and_update_db(_db, wanted, start, stop, name, ticker):
-    # ticker = get_tickers(name)
-    # print(ticker)
+    print('get_and_update_db...............')
+    ticker = get_tickers(name)
+    print('get_and_update_db', 'ticker', ticker )
     print('get_market_trading_and_update_db :', wanted, start, stop, name, ticker)
     try:
         df=pd.DataFrame()
@@ -151,7 +152,7 @@ def get_and_update_db(_db, wanted, start, stop, name, ticker):
             df = stock.get_shorting_status_by_date(start.strftime('%Y%m%d'), stop.strftime('%Y%m%d'), ticker)
         else:
             return None
-        # print(df.head())
+        print(df.head())
         # ['기관합계', '기타법인', '개인', '외국인합계']
 
         # 배열로 압축해서 넣음

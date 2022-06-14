@@ -85,5 +85,5 @@ def get_tickers(jongmok):
     return row['tickers'].values[0] if len(row['tickers'].values) else None
 
 if __name__ == '__main__':
-    # ticker_save()
+    ticker_save()
     print(get_tickers('삼성전자')) # {'id': 428, 'market': 'KOSPI', 'tickers': '005930', 'jongmoks': '삼성전자'}

@@ -8,6 +8,7 @@ import dash_bootstrap_components as dbc
 
 from app import app
 from app_config import HOSTPORT
+from momentem_stock_rel.momentem_stock_db_util import ticker_save
 from utils import Header, auth_display_page
 from apps import (
     overview,
@@ -78,6 +79,7 @@ def display_page(pathname, search):
     # return [], page_content
 
 if __name__ == '__main__':
+    ticker_save()
     dam.connect(
         db='dash_auth',
         host='mongodb://localhost:27017/'

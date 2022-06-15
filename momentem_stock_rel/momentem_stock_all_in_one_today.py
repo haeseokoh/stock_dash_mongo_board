@@ -205,10 +205,7 @@ def get_ref_date(few=4, long=51):
         choice_f = x
     return date_index[-1], choice_l, choice_f
 
-
-def main(few=4, long=51):
-    last_day, few_day, long_day = get_ref_date(few, long)
-    print(last_day, few_day, long_day)
+def create_momenterm_date(last_day, few_day, long_day):
 
     df_long = get_stock_sise(long_day)
     df_few = get_stock_sise(few_day)
@@ -221,6 +218,7 @@ def main(few=4, long=51):
     val = list(df_few['종가'])
     dict_few = dict(zip(key, val))
 
+    return_dic = {}
     for idx, df_finance in enumerate(create_master(last_day)):
         df_finance.loc[:, 'price_few_ago'] = 0
         price_few_ago_col = df_finance.columns.get_loc('price_few_ago')
@@ -272,10 +270,20 @@ def main(few=4, long=51):
         df_finance = df_finance.sort_values(by=['FINAL_RANK'], ascending=[True])
         df_finance = df_finance.reset_index(drop=True)
 
-        ymd = datetime.datetime.today().strftime('%Y%m%d')
+        # ymd = datetime.datetime.today().strftime('%Y%m%d')
 
-        df_finance.to_excel('momentum_value_{}_{}.xlsx'.format(ymd, idx))  # 최종 선정된 주식들 목록
         print(df_finance.head())
+
+        return_dic[str(idx)]=df_finance
+    return return_dic
+
+def main(few=4, long=51):
+    last_day, few_day, long_day = get_ref_date(few, long)
+    print(last_day, few_day, long_day)
+
+    dic = create_momenterm_date(last_day, few_day, long_day)
+    for key, val in dic.items():
+        val.to_excel('momentum_value_{}_{}.xlsx'.format(last_day, key))  # 최종 선정된 주식들 목록
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ import numpy as np
 
 from datetime import datetime, timedelta
 # import datetime
-from momentem_stock_rel.momentem_stock_db_util import get_tickers_df
+from momentem_stock_rel.momentem_stock_db_util import get_tickers_df, get_tickers
 
 sys.path.append(os.path.abspath('../libs'))
 from libs.mongo_api import db_init, db_update4
@@ -45,12 +45,12 @@ from libs.mongo_api import db_init, db_update4
 
 unique_field = '날짜'
 
-def get_tickers(jongmok):
-    # https://www.interviewqs.com/ddi-code-snippets/rows-cols-python
-    df_jongmok = get_tickers_df()
-
-    row = df_jongmok.loc[df_jongmok['jongmoks'] == jongmok]
-    return row['tickers'].values[0] if len(row['tickers'].values) else None
+# def get_tickers(jongmok):
+#     # https://www.interviewqs.com/ddi-code-snippets/rows-cols-python
+#     df_jongmok = get_tickers_df()
+#
+#     row = df_jongmok.loc[df_jongmok['jongmoks'] == jongmok]
+#     return row['tickers'].values[0] if len(row['tickers'].values) else None
 
 def get_max_min_from_db(_db, start, stop, name, ticker=None,):
     try:

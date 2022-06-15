@@ -20,7 +20,8 @@ from apps import (
     data_table_upload_to_db_2,
     sise_rise_main,
     sise_group_main,
-    screener_main)
+    screener_main,
+    momentem_main)
 
 server = app.server
 
@@ -29,6 +30,7 @@ menu_dic = OrderedDict({
     '/apps_forum/sise_rise_main':{'menu':'sise rise', 'module':sise_rise_main },
     '/apps_forum/sise_group_main':{'menu':'sise group', 'module':sise_group_main },
     '/apps_forum/screener_main':{'menu':'screener', 'module':screener_main },
+    '/apps_forum/momentem_main': {'menu': 'momentem', 'module': momentem_main},
     '/apps_forum/writer':{'menu':'Viewer&Writer', 'module':data_table_db_online_read_with_filter_writer },
     '/apps_forum/upload':{'menu':'Data Upload', 'module': data_table_upload_to_db},
     '/apps_forum/link':{'menu':'Link', 'module': data_table_link},

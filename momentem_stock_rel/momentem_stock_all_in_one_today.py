@@ -277,14 +277,21 @@ def create_momenterm_date(last_day, few_day, long_day):
         return_dic[str(idx)]=df_finance
     return return_dic
 
+
+def make_hyperlink(value):
+    url = "https://finance.naver.com/item/main.naver?code={}"
+    return '=HYPERLINK("%s", "%s")' % (url.format(value), value)
+
+
 def main(few=4, long=51):
     last_day, few_day, long_day = get_ref_date(few, long)
     print(last_day, few_day, long_day)
 
     dic = create_momenterm_date(last_day, few_day, long_day)
     for key, val in dic.items():
+        val['종목코드'] = val['종목코드'].apply(lambda x: make_hyperlink(x))
         val.to_excel('momentum_value_{}_{}.xlsx'.format(last_day, key))  # 최종 선정된 주식들 목록
 
 
 if __name__ == '__main__':
-    main(1, 4)
+    main(1, 24)

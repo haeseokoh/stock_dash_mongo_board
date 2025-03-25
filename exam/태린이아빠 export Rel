@@ -1,0 +1,140 @@
+import requests
+import json
+import pandas as pd
+import numpy as np
+import datetime
+
+import openpyxl
+openpyxl.__version__
+
+src_file = r'D:\!!!경제\태린이\20250321\주요품목별수출정리 3월 잠정(태린이아빠)(매일).xlsx'
+src_file_trading = r'D:\!!!경제\태린이\20250321\외국인기관수급오실레이터 (700)(태린이아빠)(매일).xlsm'
+
+
+import math
+    
+def remove_after_nan(lst):
+    for i, value in enumerate(lst):
+        # if isinstance(value, float) and np.isnan(value):
+        if math.isnan(float(value)):
+            return lst[:i]
+    return lst
+
+def cal_z_scores(_data, offset = 0):
+    data = [x+offset for x in _data]
+    mean = np.mean(data) + offset
+    std = np.std(data)
+    # z_scores = (data - mean) / std
+    z_scores = (data[-1] - mean) / std
+    # print(data)
+    return z_scores
+
+def column_check(x):
+    if isinstance(x, int):
+        return False
+    if 'unnamed' in x.lower():
+        return False
+    if '년월' in x.lower():
+        return True
+    if '일평균수출' in x.lower():
+        return True
+    return True
+
+def export_parser(df):
+    df.dropna(how='all', inplace=True) 
+    df['dates'] = df['년월'].str.replace('년', '').str.replace('월', '')
+    df = df[df['dates'].str.match(r'^\d{6}$', na=False)]
+    df = df.set_index('dates')
+    df = df[~df.index.duplicated(keep='last')].fillna(0)
+    
+    return df
+
+import xlsxwriter
+
+def num_to_col(num):
+    if num < 1:
+        raise ValueError('num must be >= 1')
+    result = ''
+    while num:
+        num, rem = divmod(num - 1, 26)
+        result = chr(ord('A') + rem) + result
+    return result
+
+
+def xlsx_z_score_sparkline(filename, df):
+    wb = xlsxwriter.Workbook(filename)
+    ws = wb.add_worksheet()
+
+    lst_z_score = []
+    ws.write_row(0, 0, ['', 'z_score', 'sparkline'] + list(df.columns))
+    for i in range(0, len(df)):
+        try:
+            name = df.iloc[i].name
+            lst = list(df.iloc[i])
+            z_score = cal_z_scores(lst)
+            y = i+1
+            ws.write(y, 0, name)
+            ws.write(y, 1, z_score)
+            ws.write_row(y, 3, lst)
+            ws.add_sparkline(y, 2, {'range':'Sheet1!{}:{}'.format( 'D'+str(y+1), num_to_col(3+len(lst))+str(y+1) )})
+        except:
+            print('z_score err!!!', i, name)
+
+    wb.close()
+
+
+
+dic_export = {}
+dic_export_company = {}
+xls = pd.ExcelFile(src_file)
+df_export = pd.DataFrame()
+for x in xls.sheet_names:
+    try: 
+        df1 = pd.read_excel(xls, x, header=2, usecols=column_check)
+        df1 = export_parser(df1)
+        df_export = pd.concat([df_export, df1['금액(달러)'].rename(x, inplace=True)], axis=1).fillna(0)
+        dic_export[x]=list(df1['금액(달러)'])
+    except:
+        print('dic_export err!!!', x)        
+df_exportT=df_export.T
+
+z_score = []
+for i in range(0, len(df_exportT)):
+    try:
+        z_score.append(cal_z_scores(list(df_exportT.iloc[i])))
+    except:
+        print('z_score err!!!', i)
+
+df_exportT.insert(loc=0, column='z_score', value=z_score)
+# df_exportT
+
+df_exportT.to_excel('수출_z_score.xlsx')
+xlsx_z_score_sparkline('export_z_score_sparkline.xlsx', df_export.T)
+
+
+
+
+
+xls = pd.ExcelFile(src_file_trading)
+
+mdf = pd.read_excel(xls, '기관매수데이터')
+df = mdf.iloc[13:,]
+df.columns=['date']+list(mdf.iloc[7,])[1:]
+
+df.set_index(keys='date', inplace=True)
+df = df.dropna(axis=1,how='all')
+dfT = df.T.astype(float).fillna(0)
+dfT.columns = [ x.replace('-', '') for x in dfT.columns.astype(str)]
+
+z_score = []
+for i in range(0, len(dfT)):
+    z_score.append(cal_z_scores(list(dfT.iloc[i])))    
+dfT['z_score']=z_score
+
+
+dfT.to_excel('기관매수데이터_z_score.xlsx')
+
+
+
+xlsx_z_score_sparkline('organPureBuy_z_score_sparkline.xlsx', dfT)
+
